@@ -281,43 +281,16 @@ abstract class BaseConnection implements DatabaseConnection, ProfilerAware, Dump
 
         $this->connect();
 
-        try {
-            return $this->pdo->beginTransaction();
-        }
-        catch( PDOException $e ) {
-            throw new TransactionException($e->getMessage(), $e->getCode(), $e);
-        }
+        return $this->transactionMethod('beginTransaction');
 
     }
 
     public function commit() {
-
-        if( !$this->isConnected() ) {
-            throw new NotConnectedException();
-        }
-
-        try {
-            return $this->pdo->commit();
-        }
-        catch( PDOException $e ) {
-            throw new TransactionException($e->getMessage(), $e->getCode(), $e);
-        }
-
+        return $this->transactionMethod('commit');
     }
 
     public function rollback() {
-
-        if( !$this->isConnected() ) {
-            throw new NotConnectedException();
-        }
-
-        try {
-            return $this->pdo->rollBack();
-        }
-        catch( PDOException $e ) {
-            throw new TransactionException($e->getMessage(), $e->getCode(), $e);
-        }
-
+        return $this->transactionMethod('rollBack');
     }
 
     public function inTransaction(): bool {
@@ -418,12 +391,28 @@ abstract class BaseConnection implements DatabaseConnection, ProfilerAware, Dump
 
         $sql = 'SET NAMES '. $this->pdo->quote($charset);
 
-        if( $collation )
+        if( $collation ) {
             $sql .= ' COLLATE '. $this->pdo->quote($collation);
+        }
 
         $this->pdo->exec($sql);
 
         return $this;
+
+    }
+
+    protected function transactionMethod( $method ) {
+
+        if( !$this->isConnected() ) {
+            throw new NotConnectedException();
+        }
+
+        try {
+            return $this->pdo->$method();
+        }
+        catch( PDOException $e ) {
+            throw new TransactionException($e->getMessage(), $e->getCode(), $e);
+        }
 
     }
 

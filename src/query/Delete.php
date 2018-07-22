@@ -50,7 +50,7 @@ class Delete extends BaseQuery implements DeleteQuery {
 
         if( $this->limit ) {
             $sql[] = "LIMIT :limit";
-            $this->params['limit']  = $this->limit;
+            $this->params['limit'] = $this->limit;
         }
 
         return $sql;

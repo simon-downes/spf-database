@@ -133,34 +133,27 @@ class DSN {
      */
     public function toString(): string {
 
-        $str = $this->config['type']. '://';
+        $scheme = $this->config['type']. '://';
 
-        if( $this->config['user'] ) {
-            $str .= $this->config['user'];
-            if( $this->config['pass'] ) {
-                $str .= ':'. $this->config['pass'];
-            }
-            $str .= '@';
+        $user = $this->optionalPart('user', 'pass');
+
+        if( $user ) {
+            $user .= '@';
         }
 
-        if( $this->config['host'] ) {
-            $str .= $this->config['host'];
-            if( $this->config['port'] ) {
-                $str .= ':'. $this->config['port'];
-            }
-        }
+        $host = $this->optionalPart('host', 'port');
 
-        $str .= '/'. $this->config['db'];
+        $path = '/'. $this->config['db'];
 
         if( $this->config['options'] ) {
-            $str .= '?';
+            $options = '?';
             foreach( $this->config['options'] as $k => $v ) {
-                $str .= "$k=>$v&";
+                $options .= "$k=>$v&";
             }
-            $str = substr($str, 0, -1);
+            $options = substr($options, 0, -1);
         }
 
-        return $str;
+        return "{$scheme}{$user}{$host}{$path}{$options}";
 
     }
 
@@ -255,6 +248,21 @@ class DSN {
         );
 
         return $config;
+
+    }
+
+    protected function optionalPart( $a, $b, $delimiter = ':' ): string {
+
+        $str = '';
+
+        if( $this->config[$a] ) {
+            $str .= $this->config[$a];
+            if( $this->config[$b] ) {
+                $str .= $delimiter. $this->config[$b];
+            }
+        }
+
+        return $str;
 
     }
 
