@@ -1,0 +1,27 @@
+{
+    "name":        "simon-downes/spf-database",
+    "description": "The database abstraction library of SPF - Simon's PHP Framework",
+    "keywords":    ["framework", "php", "spf"],
+    "license":     "MIT",
+    "authors": [
+        {
+            "name":     "Simon Downes",
+            "email":    "simon@simondownes.co.uk",
+            "homepage": "https://simondownes.co.uk",
+            "role":     "Developer"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {
+        "php": "~7.2",
+        "simon-downes/spf-contracts": "dev-master"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^7"
+    },
+    "autoload": {
+    	"psr-4": {
+            "spf\\database\\": "src/"
+        }
+    }
+}
