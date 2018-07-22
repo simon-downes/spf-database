@@ -30,23 +30,26 @@ class Select extends BaseQuery {
         $this->having   = [];
     }
 
+    /**
+     * Specify the columns to be included in the resultset.
+     * Array format:
+     * $columns = [
+     *  'column',
+     *  ['column', 'alias'],
+     * ];
+     *
+     * @param  array|string  $columns
+     */
     public function cols( $columns = ['*'] ): SelectQuery {
 
         // default to everything
-        if( !$columns ) {
+        if( empty($columns) ) {
             $columns = ['*'];
         }
         // if we don't have an array of columns then they were specified as individual arguments
         elseif( !is_array($columns) ) {
             $columns = func_get_args();
         }
-
-        // $columns = [
-        //  'column',
-        //  ['column', 'alias'],
-        //  'id',
-        //  ['related_id', 'related'],
-        // ];
 
         $this->cols = $columns;
 

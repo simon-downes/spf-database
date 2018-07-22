@@ -145,6 +145,7 @@ class DSN {
 
         $path = '/'. $this->config['db'];
 
+        $options = '';
         if( $this->config['options'] ) {
             $options = '?';
             foreach( $this->config['options'] as $k => $v ) {
