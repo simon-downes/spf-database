@@ -124,7 +124,7 @@ class DSN {
     /**
      * Dynamic property access.
      */
-    public function __isset( string $key ): boolean {
+    public function __isset( string $key ): bool {
         return isset($this->config[$key]);
     }
 

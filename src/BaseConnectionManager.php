@@ -16,7 +16,7 @@ class BaseConnectionManager implements ConnectionManager {
 
     /**
      * Array of database connections
-     * @var []
+     * @var array
      */
     protected $connections = [];
 

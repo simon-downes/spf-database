@@ -58,7 +58,7 @@ abstract class BaseConnection implements DatabaseConnection, ProfilerAware, Dump
 
     public function connect(): void {
 
-        if( $this->pdo instanceof PDO ) {
+        if( isset($this->pdo) ) {
             return;
         }
 
@@ -90,8 +90,8 @@ abstract class BaseConnection implements DatabaseConnection, ProfilerAware, Dump
         $this->pdo = null;
     }
 
-    public function isConnected(): boolean {
-        return $this->pdo instanceof PDO;
+    public function isConnected(): bool {
+        return isset($this->pdo);
     }
 
     public function select(): SelectQuery {
@@ -139,11 +139,6 @@ abstract class BaseConnection implements DatabaseConnection, ProfilerAware, Dump
         try {
 
             $statement = $this->prepare($statement);
-
-            // single parameters don't have to be passed in an array - do that here
-            if( !is_array($params) ) {
-                $params = array($params);
-            }
 
             $this->bindParams($statement, $params);
 
@@ -362,7 +357,7 @@ abstract class BaseConnection implements DatabaseConnection, ProfilerAware, Dump
     }
 
     public function dump( Dumper $dumper ): string {
-        $dumper->dump(
+        return $dumper->dump(
             $this->dsn->toString()
         );
     }
@@ -396,7 +391,7 @@ abstract class BaseConnection implements DatabaseConnection, ProfilerAware, Dump
      * @param  \Closure $callback   function to yield a result from the executed statement
      * @return array
      */
-    protected function getResult( $statement, $params, $expires, $key, Closure $callback ) {
+    protected function getResult( $statement, $params, Closure $callback ) {
 
         $statement = $this->query($statement, $params);
 
