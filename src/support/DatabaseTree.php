@@ -1,7 +1,7 @@
 <?php declare(strict_types=1);
 /* 
- * This file is part of the spf-contracts package which is distributed under the MIT License.
- * See LICENSE.md or go to https://github.com/simon-downes/spf-contracts for full license details.
+ * This file is part of the spf-database package which is distributed under the MIT License.
+ * See LICENSE.md or go to https://github.com/simon-downes/spf-database for full license details.
  */
 namespace spf\database\support;
 
@@ -117,8 +117,9 @@ class DatabaseTree implements Tree {
             $child['rgt'] = (int) $child['rgt'];
 
             // if current left > right on top of stack we've gone down a level so pop the stack
-            while( $stack && $child['lft'] > $stack[count($stack) - 1] )
+            while( $stack && $child['lft'] > $stack[count($stack) - 1] ) {
                 array_pop($stack);
+            }
 
             $child['depth'] = $offset + count($stack) + 1;
 

@@ -1,7 +1,7 @@
 <?php declare(strict_types=1);
 /* 
- * This file is part of the spf-contracts package which is distributed under the MIT License.
- * See LICENSE.md or go to https://github.com/simon-downes/spf-contracts for full license details.
+ * This file is part of the spf-database package which is distributed under the MIT License.
+ * See LICENSE.md or go to https://github.com/simon-downes/spf-database for full license details.
  */
 namespace spf\database;
 
@@ -75,8 +75,8 @@ abstract class BaseConnection implements DatabaseConnection, ProfilerAware, Dump
             $this->pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);           // always use exceptions
 
             $this->setCharacterSet(
-                $this->getOption('charset', 'UTF8'),
-                $this->getOption('collation')
+                $this->dsn->getOption('charset', 'UTF8'),
+                $this->dsn->getOption('collation')
             );
 
         }
@@ -370,10 +370,6 @@ abstract class BaseConnection implements DatabaseConnection, ProfilerAware, Dump
 
         return $callback($statement);
 
-    }
-
-    protected function getOption( string $option, string $default = '' ): string {
-        return $this->dsn->options[$option] ?? $default;
     }
 
     /**
