@@ -66,7 +66,7 @@ abstract class BaseQuery implements Query {
         $this->params   = [];
     }
 
-    public function __toString() {
+    public function __toString(): string {
         return implode("\n", $this->compile());
     }
 

@@ -38,7 +38,7 @@ class DSN {
 
         // use a closure to save loads of duplicate logic
         $select = function( $k, array $arr ) {
-            return isset($arr[$k]) ? $arr[$k] : null;
+            return $arr[$k] ?? null;
         };
 
         // construct a well-formed array from the available components
@@ -48,7 +48,7 @@ class DSN {
             'port'    => $select('port', $parts),
             'user'    => $select('user', $parts),
             'pass'    => $select('pass', $parts),
-            'db'      => trim($select('path', $parts), '/'),
+            'db'      => trim((string) $select('path', $parts), '/'),
             'options' => [],
         );
 

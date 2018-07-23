@@ -12,7 +12,7 @@ use spf\contracts\database\{DatabaseConnection, SelectQuery};
 /**
  * Generic select query.
  */
-class Select extends BaseQuery {
+class Select extends BaseQuery implements SelectQuery {
 
     protected $cols;
     protected $distinct;

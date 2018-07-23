@@ -10,7 +10,7 @@ use spf\contracts\database\{DatabaseConnection, InsertQuery};
 /**
  * Generic insert query.
  */
-class Insert extends BaseQuery {
+class Insert extends BaseQuery implements InsertQuery {
 
     protected $ignore;
     protected $into;

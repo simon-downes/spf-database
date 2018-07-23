@@ -26,7 +26,7 @@ class BaseConnectionManager implements ConnectionManager {
      */
     protected $default = '';
 
-    public function add( string $name, $connection ) {
+    public function add( string $name, $connection ): DatabaseConnection {
 
         $this->checkName($name);
 
@@ -46,24 +46,24 @@ class BaseConnectionManager implements ConnectionManager {
 
     }
 
-    public function remove( $name ) {
+    public function remove( $name ): ConnectionManager {
         unset($this->connections[$name]);
         return $this;
     }
 
-    public function get( $name ) {
+    public function get( $name ): DatabaseConnection {
         return $this->connections[$name] ?? null;
     }
 
-    public function has( $name ) {
+    public function has( $name ): bool {
         return isset($this->connections[$name]);
     }
 
-    public function getDefault() {
+    public function getDefault(): DatabaseConnection {
         return $this->connections[$this->default];
     }
 
-    public function setDefault( $name ) {
+    public function setDefault( string $name ): ConnectionManager {
 
         if( empty($this->connections[$name]) ) {
             throw new InvalidArgumentException("Unknown Connection: {$name}");

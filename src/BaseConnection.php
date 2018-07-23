@@ -285,11 +285,11 @@ abstract class BaseConnection implements DatabaseConnection, ProfilerAware, Dump
 
     }
 
-    public function commit() {
+    public function commit(): bool {
         return $this->transactionMethod('commit');
     }
 
-    public function rollback() {
+    public function rollback(): bool {
         return $this->transactionMethod('rollBack');
     }
 
@@ -372,7 +372,7 @@ abstract class BaseConnection implements DatabaseConnection, ProfilerAware, Dump
 
     }
 
-    protected function getOption( $option, $default = null ) {
+    protected function getOption( string $option, string $default = '' ): string {
         return $this->dsn->options[$option] ?? $default;
     }
 

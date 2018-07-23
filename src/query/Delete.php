@@ -5,7 +5,7 @@
  */
 namespace spf\database\query;
 
-use spf\contracts\database\{DatabaseConnection, InsertQuery};
+use spf\contracts\database\{DatabaseConnection, DeleteQuery};
 
 /**
  * Generic delete query.

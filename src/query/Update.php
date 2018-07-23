@@ -10,7 +10,7 @@ use spf\contracts\database\{DatabaseConnection, UpdateQuery};
 /**
  * Generic.
  */
-class Update extends BaseQuery {
+class Update extends BaseQuery implements UpdateQuery {
 
     protected $table;
     protected $set;
