@@ -1,5 +1,5 @@
 <?php declare(strict_types=1);
-/* 
+/*
  * This file is part of the spf-database package which is distributed under the MIT License.
  * See LICENSE.md or go to https://github.com/simon-downes/spf-database for full license details.
  */
@@ -12,7 +12,7 @@ use Exception;
  */
 class ConfigurationException extends DatabaseException {
 
-    public function __construct( string $message = 'The specified database configuration is invalid', int $code = 0, Exception $previous = null ) {
+    public function __construct( string $message = 'The specified database configuration is invalid', $code = 0, Exception $previous = null ) {
         parent::__construct($message, $code, $previous);
     }
 
