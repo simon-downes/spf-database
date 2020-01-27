@@ -1,5 +1,5 @@
 <?php declare(strict_types=1);
-/* 
+/*
  * This file is part of the spf-database package which is distributed under the MIT License.
  * See LICENSE.md or go to https://github.com/simon-downes/spf-database for full license details.
  */
@@ -145,7 +145,7 @@ abstract class BaseConnection implements DatabaseConnection, ProfilerAware, Dump
             $start = microtime(true);
             $statement->execute();
             $duration = microtime(true) - $start;
-            
+
         }
         catch( PDOException $e ) {
             throw new QueryException($e->getMessage(), $e->getCode(), $e);
@@ -175,6 +175,34 @@ abstract class BaseConnection implements DatabaseConnection, ProfilerAware, Dump
                 if( $result === false ) {
                     $result = [];
                 }
+                return $result;
+            }
+        );
+    }
+
+    public function getAllMulti( $statement, array $params = [] ): array {
+        return $this->getResult(
+            $statement,
+            $params,
+            function( PDOStatement $statement ) {
+
+                // get the first resultset
+                $result = [
+                    $statement->fetchAll()
+                ];
+
+                // now get all the remaining resultsets
+                while( $statement->nextRowset() ) {
+                    $result[] = $statement->fetchAll();
+                }
+
+                // convert falses to arrays for consistency
+                foreach( $result as &$rowset ) {
+                    if( $rowset === false ) {
+                        $rowset = [];
+                    }
+                }
+
                 return $result;
             }
         );
@@ -329,6 +357,31 @@ abstract class BaseConnection implements DatabaseConnection, ProfilerAware, Dump
 
     }
 
+    public function getLastError(): array {
+        $error = [];
+        if( $this->isConnected() ) {
+            $error = $this->pdo->errorInfo();
+        }
+        return $error;
+    }
+
+    public function getInfo(): array {
+        try {
+            return [
+                'dsn'       => $this->dsn->toString(),
+                'connected' => $this->isConnected(),
+                'driver'    => $this->pdo->getAttribute(PDO::ATTR_DRIVER_NAME ),
+                'client'    => $this->pdo->getAttribute(PDO::ATTR_CLIENT_VERSION),
+                'server'    => $this->pdo->getAttribute(PDO::ATTR_SERVER_INFO )
+
+            ];
+        }
+        catch( PDOException $e ) {
+            throw new DatabaseException($e->getMessage(), $e->getCode(), $e);
+        }
+
+    }
+
     public function dump( Dumper $dumper ): string {
         return $dumper->dump(
             $this->dsn->toString()
@@ -374,7 +427,7 @@ abstract class BaseConnection implements DatabaseConnection, ProfilerAware, Dump
 
     /**
      * Make sure the connection is using the correct character set
-     * 
+     *
      * @param string $charset   the character set to use for the connection
      * @param string $collation the collation method to use for the connection
      * @return self
