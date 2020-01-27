@@ -23,6 +23,7 @@ class DSN {
     const TYPE_MYSQL  = 'mysql';
     const TYPE_PGSQL  = 'pgsql';
     const TYPE_SQLITE = 'sqlite';
+    const TYPE_SQLSRV = 'sqlsrv';
 
     protected $config;
 
@@ -114,6 +115,15 @@ class DSN {
     }
 
     /**
+     * Determine if this DSN is setup for SQL Server or not.
+     *
+     * @return bool
+     */
+    public function isSQLSrv(): bool {
+        return $this->confgi['type'] == static::TYPE_SQLSRV;
+    }
+
+    /**
      * Dynamic property access.
      * @return mixed
      */
@@ -182,6 +192,7 @@ class DSN {
             static::TYPE_MYSQL  => 'configureMySQL',
             static::TYPE_PGSQL  => 'configurePgSQL',
             static::TYPE_SQLITE => 'configureSQLite',
+            static::TYPE_SQLSRV => 'configureSQLSrv',
         ];
 
         if( empty($methods[$config['type']]) ) {
@@ -251,6 +262,24 @@ class DSN {
             'sqlite::%s',
             $config['db']
         );
+
+        return $config;
+
+    }
+
+    /**
+     * Configure a Microsoft SQL Server DSN.
+     *
+     * @param array $config
+     * @return array
+     */
+    protected function configureSQLSrv( array $config ): array {
+
+        if (empty($config['port'])) {
+            $config['port'] = 1433;
+        }
+
+        $config['pdo'] = sprintf('sqlsrv:Server=%s;Database=%s', $config['host'], $config['db']);
 
         return $config;
 
