@@ -1,5 +1,5 @@
 <?php declare(strict_types=1);
-/* 
+/*
  * This file is part of the spf-database package which is distributed under the MIT License.
  * See LICENSE.md or go to https://github.com/simon-downes/spf-database for full license details.
  */
@@ -25,6 +25,24 @@ class BaseConnectionManager implements ConnectionManager {
      * @var string
      */
     protected $default = '';
+
+    public static function createFromDSN( DSN $dsn ) {
+
+        $factories = [
+            DSN::TYPE_MYSQL  => MySQLConnection::class,
+            DSN::TYPE_PGSQL  => PgSQLConnection::class,
+            DSN::TYPE_SQLITE => SQLiteConnection::class,
+        ];
+
+        if( empty($factories[$dsn->type]) ) {
+            throw new ConfigurationException("Invalid database type: {$dsn->type}");
+        }
+
+        $class = $factories[$dsn->type];
+
+        return new $class($dsn);
+
+    }
 
     public function add( string $name, $connection ): DatabaseConnection {
 
@@ -83,19 +101,7 @@ class BaseConnectionManager implements ConnectionManager {
 
         $dsn = $this->validateDSN($dsn);
 
-        $factories = [
-            DSN::TYPE_MYSQL  => MySQLConnection::class,
-            DSN::TYPE_PGSQL  => PgSQLConnection::class,
-            DSN::TYPE_SQLITE => SQLiteConnection::class,
-        ];
-
-        if( empty($factories[$dsn->type]) ) {
-            throw new ConfigurationException("Invalid database type: {$dsn->type}");
-        }
-
-        $class = $factories[$dsn->type];
-
-        return new $class($dsn);
+        return static::createFromDSN($dsn);
 
     }
 
